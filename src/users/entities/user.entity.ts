@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-// eslint-disable-next-line prettier/prettier
+
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm'
 
 @Entity('users')
