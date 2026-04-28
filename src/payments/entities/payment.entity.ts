@@ -13,7 +13,7 @@ export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Credit)
+  @ManyToOne(() => Credit, (credit) => credit.payments)
   @JoinColumn()
   credit: Credit;
 

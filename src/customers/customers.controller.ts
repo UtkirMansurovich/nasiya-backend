@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { Customer } from './entities/customer.entity';
@@ -16,8 +17,13 @@ export class CustomersController {
 
   // GET /customers
   @Get()
-  findAll() {
-    return this.customersService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNumber = page ? parseInt(page, 10) : 1;
+    const limitNumber = limit ? parseInt(limit, 10) : 10;
+    return this.customersService.findAll(pageNumber, limitNumber);
   }
 
   // GET /customers/:id
@@ -42,5 +48,10 @@ export class CustomersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.customersService.remove(+id);
+  }
+
+  @Post('upsert')
+  upsert(@Body() data: Partial<Customer>) {
+    return this.customersService.upsert(data);
   }
 }

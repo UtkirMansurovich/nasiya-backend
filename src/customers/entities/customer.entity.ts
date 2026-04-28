@@ -3,7 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Credit } from '../../credits/entities/credit.entity';
 
 @Entity('customers')
 export class Customer {
@@ -48,4 +50,7 @@ export class Customer {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @OneToMany(() => Credit, (credit) => credit.customer)
+  credits: Credit[];
 }

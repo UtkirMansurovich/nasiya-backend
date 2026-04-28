@@ -5,16 +5,18 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Customer } from '../../customers/entities/customer.entity';
 import { Partner } from '../../partners/entities/partner.entity';
+import { Payment } from '../../payments/entities/payment.entity';
 
 @Entity('credits')
 export class Credit {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Customer)
+  @ManyToOne(() => Customer, (customer) => customer.credits)
   @JoinColumn()
   customer: Customer;
 
@@ -55,4 +57,7 @@ export class Credit {
 
   @CreateDateColumn()
   start_date: Date;
+
+  @OneToMany(() => Payment, (payment) => payment.credit)
+  payments: Payment[];
 }
