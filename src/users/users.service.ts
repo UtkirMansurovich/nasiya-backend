@@ -10,7 +10,7 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findByUsername(username: string) {
+  async findByUsername(username: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { username } });
   }
 

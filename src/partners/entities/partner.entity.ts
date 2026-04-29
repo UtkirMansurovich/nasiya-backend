@@ -11,33 +11,33 @@ import { User } from '../../users/entities/user.entity';
 @Entity('partners')
 export class Partner {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @OneToOne(() => User)
   @JoinColumn()
-  user: User;
+  user!: User;
 
   @Column()
-  full_name: string;
+  full_name!: string;
 
   @Column({ nullable: true })
-  phone: string;
+  phone!: string;
 
   @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
-  balance: number;
+  balance!: number;
 
   @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
-  total_invested: number;
+  total_invested!: number;
 
   @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
-  total_profit: number;
+  total_profit!: number;
 
   @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
-  total_loss: number;
+  total_loss!: number;
 
   @Column({ nullable: true })
-  notes: string;
+  notes!: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at!: Date;
 }

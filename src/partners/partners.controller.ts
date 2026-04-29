@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { PartnersService } from './partners.service';
 import { Partner } from './entities/partner.entity';
+import { CreatePartnerDto } from './dto/create-partner.dto';
 
 @Controller('partners')
 export class PartnersController {
@@ -28,7 +29,7 @@ export class PartnersController {
 
   // POST /partners
   @Post()
-  create(@Body() data: Partial<Partner>) {
+  create(@Body() data: CreatePartnerDto) {
     return this.partnersService.create(data);
   }
 

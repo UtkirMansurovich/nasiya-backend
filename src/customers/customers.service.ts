@@ -60,7 +60,8 @@ export class CustomersService {
       }
     });
 
-    const ustama_foiz = credits.length > 0 ? total_markup_percent / credits.length : 0;
+    const ustama_foiz =
+      credits.length > 0 ? total_markup_percent / credits.length : 0;
     const foyda = jami_qarz_va_foyda - jami_qarz;
 
     // Overall status logic
@@ -89,8 +90,6 @@ export class CustomersService {
       },
     };
   }
-
-
 
   // Yangi mijoz qo'shish
   async create(data: Partial<Customer>) {

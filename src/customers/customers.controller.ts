@@ -17,10 +17,7 @@ export class CustomersController {
 
   // GET /customers
   @Get()
-  findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-  ) {
+  findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     const pageNumber = page ? parseInt(page, 10) : 1;
     const limitNumber = limit ? parseInt(limit, 10) : 10;
     return this.customersService.findAll(pageNumber, limitNumber);
