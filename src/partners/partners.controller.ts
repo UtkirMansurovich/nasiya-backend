@@ -6,10 +6,11 @@ import {
   Delete,
   Body,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { PartnersService } from './partners.service';
-import { Partner } from './entities/partner.entity';
 import { CreatePartnerDto } from './dto/create-partner.dto';
+import { Partner } from './entities/partner.entity';
 
 @Controller('partners')
 export class PartnersController {
@@ -37,6 +38,14 @@ export class PartnersController {
   @Put(':id')
   update(@Param('id') id: string, @Body() data: Partial<Partner>) {
     return this.partnersService.update(+id, data);
+  }
+
+  @Patch(':id/account')
+  updateAccount(
+    @Param('id') id: string,
+    @Body() data: { username?: string; password?: string },
+  ) {
+    return this.partnersService.updateAccount(+id, data);
   }
 
   // DELETE /partners/:id

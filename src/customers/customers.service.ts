@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Customer } from './entities/customer.entity';
+import { CustomerStats } from './interfaces';
 
 @Injectable()
 export class CustomersService {
@@ -11,7 +12,15 @@ export class CustomersService {
   ) {}
 
   // Barcha mijozlarni olish
-  async findAll(page: number = 1, limit: number = 10) {
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{
+    data: (Customer & { stats: CustomerStats })[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
     const [data, total] = await this.customerRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
@@ -34,7 +43,9 @@ export class CustomersService {
     return this.calculateStats(customer);
   }
 
-  private calculateStats(customer: any) {
+  private calculateStats(
+    customer: Customer,
+  ): Customer & { stats: CustomerStats } {
     const credits = customer.credits || [];
     let jami_qarz = 0; // Tannarx (Principal)
     let jami_qarz_va_foyda = 0; // Jami qaytishi kerak bo'lgan summa (Total Debt)
@@ -127,5 +138,40 @@ export class CustomersService {
       const saved = await this.customerRepository.save(customer);
       return { action: 'created', customer: saved };
     }
+  }
+
+  async importBulk(customers: Partial<Customer>[]) {
+    let created = 0;
+    let updated = 0;
+    const errors: { row: number; phone: string; message: string }[] = [];
+
+    // Barcha telefon raqamlarni bir martada DB dan
+    const phones = customers.map((c) => c.phone).filter(Boolean) as string[];
+    const existing = await this.customerRepository.find({
+      where: phones.map((phone) => ({ phone })),
+    });
+    const existingMap = new Map(existing.map((c) => [c.phone, c]));
+
+    for (let i = 0; i < customers.length; i++) {
+      const data = customers[i];
+      try {
+        const found = existingMap.get(data.phone!);
+        if (found) {
+          await this.customerRepository.update(found.id, data);
+          updated++;
+        } else {
+          const customer = this.customerRepository.create(data);
+          await this.customerRepository.save(customer);
+          created++;
+        }
+      } catch {
+        errors.push({
+          row: i + 1,
+          phone: data.phone || '-',
+          message: 'Saqlashda xatolik!',
+        });
+      }
+    }
+    return { created, updated, errors };
   }
 }

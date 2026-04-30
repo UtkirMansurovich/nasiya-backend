@@ -23,6 +23,15 @@ export class CustomersController {
     return this.customersService.findAll(pageNumber, limitNumber);
   }
 
+  @Post('import-bulk')
+  importBulk(@Body() body: { customers: Partial<Customer>[] }) {
+    return this.customersService.importBulk(body.customers);
+  }
+  @Post('upsert')
+  upsert(@Body() data: Partial<Customer>) {
+    return this.customersService.upsert(data);
+  }
+
   // GET /customers/:id
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -45,10 +54,5 @@ export class CustomersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.customersService.remove(+id);
-  }
-
-  @Post('upsert')
-  upsert(@Body() data: Partial<Customer>) {
-    return this.customersService.upsert(data);
   }
 }
