@@ -11,25 +11,25 @@ import { Credit } from '../../credits/entities/credit.entity';
 @Entity('payments')
 export class Payment {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @ManyToOne(() => Credit, (credit) => credit.payments)
   @JoinColumn()
-  credit: Credit;
+  credit!: Credit;
 
   @Column({ type: 'decimal', precision: 15, scale: 2 })
-  amount: number;
+  amount!: number;
 
   @Column({
     type: 'enum',
     enum: ['cash', 'card', 'transfer'],
     default: 'cash',
   })
-  method: string;
+  method!: string;
 
   @Column({ nullable: true })
-  notes: string;
+  notes!: string;
 
   @CreateDateColumn()
-  payment_date: Date;
+  payment_date!: Date;
 }

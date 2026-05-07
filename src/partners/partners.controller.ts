@@ -22,6 +22,12 @@ export class PartnersController {
     return this.partnersService.findAll();
   }
 
+  // GET /partners/archived
+  @Get('archived')
+  findArchived() {
+    return this.partnersService.findArchived();
+  }
+
   // GET /partners/:id
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -52,5 +58,17 @@ export class PartnersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.partnersService.remove(+id);
+  }
+
+  // PATCH /partners/:id/archive
+  @Patch(':id/archive')
+  archive(@Param('id') id: string) {
+    return this.partnersService.archive(+id);
+  }
+
+  // PATCH /partners/:id/restore
+  @Patch(':id/restore')
+  restore(@Param('id') id: string) {
+    return this.partnersService.restore(+id);
   }
 }

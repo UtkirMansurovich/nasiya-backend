@@ -11,6 +11,13 @@ export class CustomersService {
     private customerRepository: Repository<Customer>,
   ) {}
 
+  async findAllWithoutPagination(): Promise<Customer[]> {
+    const customers = await this.customerRepository.find({
+      order: { full_name: 'ASC' },
+    });
+    return customers;
+  }
+
   // Barcha mijozlarni olish
   async findAll(
     page: number = 1,

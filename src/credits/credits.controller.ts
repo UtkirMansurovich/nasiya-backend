@@ -3,10 +3,10 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Delete,
   Body,
   Param,
-  Patch,
 } from '@nestjs/common';
 import { CreditsService } from './credits.service';
 import { CreateCreditDto } from './dto/create-credit.dto';
@@ -22,21 +22,22 @@ export class CreditsController {
     return this.creditsService.findAll();
   }
 
-  // GET /customer/:customerId
-  @Get('customer/:cutomerId')
+  // GET /credits/:id
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.creditsService.findOne(+id);
+  }
+
+  // GET /credits/customer/:customerId
+  @Get('customer/:customerId')
   findByCustomer(@Param('customerId') customerId: string) {
     return this.creditsService.findByCustomer(+customerId);
   }
 
-  // GET /partner/:partnerId
+  // GET /credits/partner/:partnerId
   @Get('partner/:partnerId')
   findByPartner(@Param('partnerId') partnerId: string) {
     return this.creditsService.findByPartner(+partnerId);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.creditsService.findOne(+id);
   }
 
   // POST /credits
@@ -51,12 +52,13 @@ export class CreditsController {
     return this.creditsService.update(+id, data);
   }
 
+  // PATCH /credits/:id/status
   @Patch(':id/status')
   updateStatus(
     @Param('id') id: string,
-    @Body('status') status: 'active' | 'completed' | 'defaulted',
+    @Body() data: { status: 'active' | 'completed' | 'defaulted' },
   ) {
-    return this.creditsService.updateStatus(+id, status);
+    return this.creditsService.updateStatus(+id, data.status);
   }
 
   // DELETE /credits/:id

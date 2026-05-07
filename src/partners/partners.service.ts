@@ -26,7 +26,19 @@ export class PartnersService {
 
   // Barcha sheriklar
   async findAll() {
-    return this.partnerRepository.find({ relations: ['user'] });
+    return this.partnerRepository.find({
+      where: { status: 'active' }, // ← faqat active
+      relations: ['user'],
+      order: { created_at: 'DESC' },
+    });
+  }
+
+  async findArchived() {
+    return this.partnerRepository.find({
+      where: { status: 'archived' },
+      relations: ['user'],
+      order: { archived_at: 'DESC' },
+    });
   }
 
   // Bitta sherik
@@ -154,5 +166,41 @@ export class PartnersService {
     await this.partnerRepository.delete(id);
 
     return { message: "Sherik muvaffaqiyatli o'chirildi" };
+  }
+
+  // Sherikni arxivlash
+  async archive(id: number) {
+    // Aktiv nasiyalar bormi tekshirish
+    const activeCredits = await this.creditRepository.find({
+      where: {
+        partner: { id },
+        status: 'active',
+      },
+    });
+
+    if (activeCredits.length > 0) {
+      throw new BadRequestException(
+        `Sherikni arxivlab bo'lmaydi! ${activeCredits.length} ta aktiv nasiya mavjud!`,
+      );
+    }
+
+    await this.partnerRepository.update(id, {
+      status: 'archived',
+      archived_at: new Date(),
+    });
+
+    return this.findOne(id);
+  }
+
+  // Sherikni tiklash
+  async restore(id: number) {
+    await this.findOne(id);
+
+    await this.partnerRepository.update(id, {
+      status: 'active',
+      archived_at: undefined,
+    });
+
+    return this.findOne(id);
   }
 }

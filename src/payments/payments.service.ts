@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from './entities/payment.entity';
 import { Credit } from '../credits/entities/credit.entity';
+import { CreatePaymentDto } from './dto/create-payment.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -40,10 +41,10 @@ export class PaymentsService {
   }
 
   // Yangi to'lov qo'shish
-  async create(data: any) {
+  async create(data: CreatePaymentDto) {
     // Nasiyani topish
     const credit = await this.creditRepository.findOne({
-      where: { id: data.credit.id },
+      where: { id: data.creditId },
     });
     if (!credit) throw new NotFoundException('Nasiya topilmadi');
 

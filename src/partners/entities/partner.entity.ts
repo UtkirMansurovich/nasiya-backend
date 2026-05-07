@@ -40,4 +40,14 @@ export class Partner {
 
   @CreateDateColumn()
   created_at!: Date;
+
+  @Column({
+    type: 'enum',
+    enum: ['active', 'archived'],
+    default: 'active',
+  })
+  status!: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  archived_at!: Date | null;
 }

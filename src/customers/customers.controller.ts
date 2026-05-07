@@ -15,6 +15,11 @@ import { Customer } from './entities/customer.entity';
 export class CustomersController {
   constructor(private customersService: CustomersService) {}
 
+  @Get('all')
+  findAllWithoutPagination() {
+    return this.customersService.findAllWithoutPagination();
+  }
+
   // GET /customers
   @Get()
   findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
