@@ -53,11 +53,17 @@ export class Credit {
     enum: ['active', 'completed', 'defaulted'],
     default: 'active',
   })
-  status!: string;
+  status!: 'active' | 'completed' | 'defaulted';
 
   @CreateDateColumn()
   start_date!: Date;
 
   @OneToMany(() => Payment, (payment) => payment.credit)
   payments!: Payment[];
+
+  @Column({ type: 'int', default: 0 })
+  duration_days!: number;
+
+  @Column({ type: 'int', default: 0 })
+  working_days!: number;
 }
