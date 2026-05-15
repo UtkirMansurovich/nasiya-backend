@@ -8,3 +8,13 @@ export class CreateCreditDto {
   start_date!: string;
   notes?: string;
 }
+
+export class ImportCreditDto {
+  customer_phone!: string;
+  product_name!: string;
+  cost_price!: number;
+  markup_percent?: number;
+  duration_days?: number;
+  start_date?: string;
+  notes?: string;
+}

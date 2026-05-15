@@ -53,4 +53,8 @@ export class Customer {
 
   @OneToMany(() => Credit, (credit) => credit.customer)
   credits!: Credit[];
+
+  // customer.entity.ts
+  @Column({ unique: true, nullable: true }) // Slug odatda takrorlanmas (unique) bo'lishi kerak
+  slug!: string;
 }

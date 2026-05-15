@@ -9,7 +9,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { CreditsService } from './credits.service';
-import { CreateCreditDto } from './dto/create-credit.dto';
+import { CreateCreditDto, ImportCreditDto } from './dto/create-credit.dto';
 import { Credit } from './entities/credit.entity';
 
 @Controller('credits')
@@ -22,10 +22,10 @@ export class CreditsController {
     return this.creditsService.findAll();
   }
 
-  // GET /credits/:id
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.creditsService.findOne(+id);
+  // POST /credits/import-bulk
+  @Post('import-bulk')
+  importBulk(@Body() body: { credits: ImportCreditDto[] }) {
+    return this.creditsService.importBulk(body.credits);
   }
 
   // GET /credits/customer/:customerId
@@ -38,6 +38,12 @@ export class CreditsController {
   @Get('partner/:partnerId')
   findByPartner(@Param('partnerId') partnerId: string) {
     return this.creditsService.findByPartner(+partnerId);
+  }
+
+  // GET /credits/:id
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.creditsService.findOne(+id);
   }
 
   // POST /credits

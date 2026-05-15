@@ -28,6 +28,12 @@ export class PartnersController {
     return this.partnersService.findArchived();
   }
 
+  // GET /partners/by-username/:username
+  @Get('by-username/:username')
+  findByUsername(@Param('username') username: string) {
+    return this.partnersService.findByUsername(username);
+  }
+
   // GET /partners/:id
   @Get(':id')
   findOne(@Param('id') id: string) {

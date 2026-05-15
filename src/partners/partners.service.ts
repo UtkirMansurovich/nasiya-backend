@@ -203,4 +203,15 @@ export class PartnersService {
 
     return this.findOne(id);
   }
+
+  async findByUsername(username: string): Promise<Partner | null> {
+    const partner = await this.partnerRepository
+      .createQueryBuilder('partner')
+      .leftJoinAndSelect('partner.user', 'user')
+      .where('user.username = :username', { username })
+      .getOne();
+
+    console.log('found partner:', JSON.stringify(partner));
+    return partner;
+  }
 }

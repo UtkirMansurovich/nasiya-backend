@@ -123,7 +123,60 @@ export class ReportsService {
   async getDefaultedCredits() {
     return this.creditRepository.find({
       where: { status: 'defaulted' },
-      relations: ['customer', 'partner'],
+      relations: ['customer', 'partner', 'payments'],
+      order: { start_date: 'DESC' },
     });
+  }
+
+  // Oylik to'lov statistikasi (so'nggi 6 oy)
+  async getMonthlyStats() {
+    const rows = await this.paymentRepository
+      .createQueryBuilder('payment')
+      .select("DATE_FORMAT(payment.payment_date, '%Y-%m')", 'month')
+      .addSelect('SUM(payment.amount)', 'total')
+      .addSelect('COUNT(payment.id)', 'count')
+      .where(
+        "payment.payment_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)",
+      )
+      .groupBy('month')
+      .orderBy('month', 'ASC')
+      .getRawMany();
+
+    return rows.map((r) => ({
+      month: r.month as string,
+      total: Number(r.total),
+      count: Number(r.count),
+    }));
+  }
+
+  // Eng ko'p qarzlor (qolgan qarzi bo'yicha)
+  async getTopDebtors(limit = 5) {
+    const credits = await this.creditRepository.find({
+      where: { status: 'active' },
+      relations: ['customer'],
+    });
+
+    // Mijoz bo'yicha qolgan qarzlarni yig'amiz
+    const map = new Map<
+      number,
+      { id: number; full_name: string; remaining: number }
+    >();
+
+    for (const c of credits) {
+      const existing = map.get(c.customer.id);
+      if (existing) {
+        existing.remaining += Number(c.remaining_debt);
+      } else {
+        map.set(c.customer.id, {
+          id: c.customer.id,
+          full_name: c.customer.full_name,
+          remaining: Number(c.remaining_debt),
+        });
+      }
+    }
+
+    return Array.from(map.values())
+      .sort((a, b) => b.remaining - a.remaining)
+      .slice(0, limit);
   }
 }

@@ -37,6 +37,12 @@ export class CustomersController {
     return this.customersService.upsert(data);
   }
 
+  // GET /customers/by-phone/:phone
+  @Get('by-phone/:phone')
+  findByPhone(@Param('phone') phone: string) {
+    return this.customersService.findByPhone(phone);
+  }
+
   // GET /customers/:id
   @Get(':id')
   findOne(@Param('id') id: string) {

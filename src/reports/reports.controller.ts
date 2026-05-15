@@ -28,4 +28,16 @@ export class ReportsController {
   getDefaultedCredits() {
     return this.reportsService.getDefaultedCredits();
   }
+
+  // GET /reports/monthly-stats
+  @Get('monthly-stats')
+  getMonthlyStats() {
+    return this.reportsService.getMonthlyStats();
+  }
+
+  // GET /reports/top-debtors
+  @Get('top-debtors')
+  getTopDebtors() {
+    return this.reportsService.getTopDebtors();
+  }
 }

@@ -30,6 +30,9 @@ export class Payment {
   @Column({ nullable: true })
   notes!: string;
 
-  @CreateDateColumn()
+  @Column({ type: 'date' }) // ← CreateDateColumn o'rniga
   payment_date!: Date;
+
+  @CreateDateColumn()
+  created_at!: Date; // ← qachon kiritilgani (avtomatik)
 }
